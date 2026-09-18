@@ -1,0 +1,470 @@
+import type { TowerDef, TowerId, UpgradeTier } from './types'
+
+function path(
+  names: [string, string, string, string],
+  descs: [string, string, string, string],
+  costs: [number, number, number, number],
+  mods: Partial<UpgradeTier>[],
+): UpgradeTier[] {
+  return names.map((name, i) => ({
+    name,
+    desc: descs[i],
+    cost: costs[i],
+    ...mods[i],
+  }))
+}
+
+export const TOWERS: TowerDef[] = [
+  {
+    id: 'dartkeep', name: 'Dartkeep', role: 'Cheap darts', cost: 175, range: 175,
+    damage: 1, rate: 1.15, pierce: 1, color: '#8d6e63', accent: '#5d4037',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Sharp Tips', 'Razor Quills', 'Javelin Keep', 'Orbcleaver'],
+        ['+1 damage', '+1 pierce', '+2 damage, +1 pierce', 'Huge damage & pierce'],
+        [120, 200, 450, 1400],
+        [{ dmg: 1 }, { pierce: 1 }, { dmg: 2, pierce: 1 }, { dmg: 5, pierce: 3 }],
+      ),
+      path(
+        ['Quick Hands', 'Rapid Volley', 'Twin Quills', 'Storm of Darts'],
+        ['Faster attacks', 'Even faster', '+1 extra shot', 'Triple shot barrage'],
+        [100, 250, 600, 1600],
+        [{ rate: 0.3 }, { rate: 0.4 }, { extraShots: 1 }, { extraShots: 2, rate: 0.25 }],
+      ),
+      path(
+        ['Keen Eye', 'Long Quill', 'Lead Tips', 'Camo Scout'],
+        ['+range', 'More range', 'Pops lead', 'Sees camo + range'],
+        [100, 250, 400, 1200],
+        [{ range: 20 }, { range: 35 }, { lead: true }, { camo: true, range: 30 }],
+      ),
+    ],
+  },
+  {
+    id: 'spikewheel', name: 'Spikewheel', role: '8-way tacks', cost: 280, range: 125,
+    damage: 1, rate: 1.05, pierce: 1, color: '#ef6c00', accent: '#e65100',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: true, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Hot Spikes', 'Barbed Ring', 'Blade Wheel', 'Shredder Star'],
+        ['+1 damage', '+1 pierce', '+2 damage', 'Massive radial shred'],
+        [140, 280, 650, 1800],
+        [{ dmg: 1 }, { pierce: 1 }, { dmg: 2, pierce: 1 }, { dmg: 5, pierce: 2 }],
+      ),
+      path(
+        ['Spin Up', 'Overdrive', 'Double Ring', 'Hurricane Wheel'],
+        ['Faster spin', 'Faster still', 'Extra ring burst', 'Nonstop storm'],
+        [150, 320, 800, 2200],
+        [{ rate: 0.25 }, { rate: 0.4 }, { extraShots: 1 }, { rate: 0.5, extraShots: 1 }],
+      ),
+      path(
+        ['Wider Reach', 'Spike Spread', 'Lead Spikes', 'Camo Teeth'],
+        ['+range', 'More range', 'Pops lead', 'Sees camo'],
+        [120, 260, 450, 1400],
+        [{ range: 15 }, { range: 25 }, { lead: true }, { camo: true, range: 20 }],
+      ),
+    ],
+  },
+  {
+    id: 'frostward', name: 'Frostward', role: 'Slow & freeze', cost: 375, range: 150,
+    damage: 1, rate: 0.85, pierce: 1, color: '#4fc3f7', accent: '#0277bd',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: true, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0.45, minRange: 0,
+    paths: [
+      path(
+        ['Deep Chill', 'Ice Shard', 'Permafrost', 'Absolute Zero'],
+        ['+damage', '+pierce & slow', 'Strong freeze', 'Freeze storms'],
+        [180, 350, 800, 2500],
+        [{ dmg: 1 }, { pierce: 1, slow: 0.1 }, { dmg: 2, slow: 0.15 }, { dmg: 3, slow: 0.2, pierce: 2 }],
+      ),
+      path(
+        ['Quick Frost', 'Blizzard Cadence', 'Twin Flurry', 'Avalanche'],
+        ['Faster casts', 'Faster', 'Extra shard', 'Rapid freeze'],
+        [160, 340, 750, 2100],
+        [{ rate: 0.2 }, { rate: 0.3 }, { extraShots: 1 }, { rate: 0.4, extraShots: 1 }],
+      ),
+      path(
+        ['Cold Front', 'Arctic Reach', 'Shatter Lead', 'Frost Sight'],
+        ['+range', 'More range', 'Pops lead', 'Sees camo'],
+        [140, 280, 500, 1600],
+        [{ range: 20 }, { range: 30 }, { lead: true }, { camo: true, range: 25 }],
+      ),
+    ],
+  },
+  {
+    id: 'boomcannon', name: 'Boomcannon', role: 'Bombs, pops lead', cost: 525, range: 160,
+    damage: 2, rate: 0.6, pierce: 1, color: '#6d4c41', accent: '#3e2723',
+    seesCamo: false, popsLead: true, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: true, isChain: false,
+    farmIncome: 0, splash: 55, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Bigger Boom', 'Cluster Shell', 'Demolisher', 'Orbquake'],
+        ['+splash & dmg', 'Bigger splash', 'Heavy bombs', 'Devastating blasts'],
+        [250, 450, 1100, 3200],
+        [{ dmg: 1, splash: 15 }, { splash: 25, dmg: 1 }, { dmg: 3, splash: 30 }, { dmg: 6, splash: 50 }],
+      ),
+      path(
+        ['Quick Fuse', 'Rapid Barrage', 'Double Barrel', 'Artillery Storm'],
+        ['Faster fire', 'Faster', 'Extra shell', 'Relentless cannon'],
+        [220, 420, 1000, 2800],
+        [{ rate: 0.15 }, { rate: 0.25 }, { extraShots: 1 }, { rate: 0.3, extraShots: 1 }],
+      ),
+      path(
+        ['Long Barrel', 'Siege Range', 'Frag Burst', 'Spotter Lens'],
+        ['+range', 'More range', '+pierce', 'Sees camo'],
+        [180, 360, 700, 1800],
+        [{ range: 25 }, { range: 40 }, { pierce: 2 }, { camo: true, range: 20 }],
+      ),
+    ],
+  },
+  {
+    id: 'gyreblade', name: 'Gyreblade', role: 'Piercing blades', cost: 425, range: 180,
+    damage: 1, rate: 0.95, pierce: 4, color: '#78909c', accent: '#455a64',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Keen Edge', 'Razor Orbit', 'Guillotine', 'Vortex Edge'],
+        ['+damage', '+pierce', 'Heavy cuts', 'Ultimate blade'],
+        [200, 400, 900, 2600],
+        [{ dmg: 1 }, { pierce: 2 }, { dmg: 2, pierce: 2 }, { dmg: 4, pierce: 4 }],
+      ),
+      path(
+        ['Spin Faster', 'Whirl Tempo', 'Twin Gyre', 'Blade Typhoon'],
+        ['Faster', 'Faster', 'Extra blade', 'Blade storm'],
+        [180, 380, 850, 2400],
+        [{ rate: 0.2 }, { rate: 0.3 }, { extraShots: 1 }, { rate: 0.35, extraShots: 1 }],
+      ),
+      path(
+        ['Wide Arc', 'Far Throw', 'Lead Edge', 'Shadow Cut'],
+        ['+range', 'More range', 'Pops lead', 'Sees camo'],
+        [150, 300, 550, 1500],
+        [{ range: 25 }, { range: 35 }, { lead: true }, { camo: true, range: 25 }],
+      ),
+    ],
+  },
+  {
+    id: 'longshot', name: 'Longshot', role: 'Long range camo', cost: 500, range: 300,
+    damage: 2, rate: 0.7, pierce: 1, color: '#558b2f', accent: '#33691e',
+    seesCamo: true, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Heavy Bolt', 'Armor Piercer', 'Deadeye', 'Horizon Strike'],
+        ['+damage', '+pierce', 'Big damage', 'Sniper king'],
+        [220, 450, 1000, 3000],
+        [{ dmg: 1 }, { pierce: 1, dmg: 1 }, { dmg: 3 }, { dmg: 6, pierce: 2 }],
+      ),
+      path(
+        ['Steady Aim', 'Rapid Scope', 'Double Bolt', 'Volley Nest'],
+        ['Faster', 'Faster', 'Extra bolt', 'Rapid sniping'],
+        [200, 400, 900, 2500],
+        [{ rate: 0.15 }, { rate: 0.25 }, { extraShots: 1 }, { rate: 0.3, extraShots: 1 }],
+      ),
+      path(
+        ['Eagle Eye', 'Ultra Range', 'Lead Tip', 'Night Vision'],
+        ['+range', 'Huge range', 'Pops lead', 'Camo mastery'],
+        [180, 400, 600, 1600],
+        [{ range: 40 }, { range: 60 }, { lead: true }, { camo: true, range: 40 }],
+      ),
+    ],
+  },
+  {
+    id: 'arcmage', name: 'Arcmage', role: 'Magic, pops lead', cost: 550, range: 175,
+    damage: 2, rate: 0.8, pierce: 2, color: '#7e57c2', accent: '#4527a0',
+    seesCamo: false, popsLead: true, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Arc Bolt', 'Mana Surge', 'Rift Lance', 'Orbshatter'],
+        ['+damage', '+pierce', 'Heavy magic', 'Ultimate arc'],
+        [240, 480, 1100, 3200],
+        [{ dmg: 1 }, { pierce: 1 }, { dmg: 3, pierce: 1 }, { dmg: 5, pierce: 3 }],
+      ),
+      path(
+        ['Quick Cast', 'Mana Flow', 'Twin Arc', 'Spellstorm'],
+        ['Faster', 'Faster', 'Extra bolt', 'Rapid magic'],
+        [200, 420, 950, 2700],
+        [{ rate: 0.2 }, { rate: 0.3 }, { extraShots: 1 }, { rate: 0.35, extraShots: 1 }],
+      ),
+      path(
+        ['Far Focus', 'Astral Reach', 'Deep Magic', 'True Sight'],
+        ['+range', 'More range', '+damage', 'Sees camo'],
+        [160, 340, 700, 1800],
+        [{ range: 25 }, { range: 40 }, { dmg: 1 }, { camo: true, range: 30 }],
+      ),
+    ],
+  },
+  {
+    id: 'nightshade', name: 'Nightshade', role: 'Fast camo hunter', cost: 650, range: 155,
+    damage: 1, rate: 1.45, pierce: 1, color: '#37474f', accent: '#102027',
+    seesCamo: true, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Venom Tip', 'Assassin Edge', 'Shadow Fang', 'Deathbloom'],
+        ['+damage', '+pierce', 'Heavy hits', 'Lethal shade'],
+        [250, 500, 1200, 3500],
+        [{ dmg: 1 }, { pierce: 1, dmg: 1 }, { dmg: 3 }, { dmg: 6, pierce: 2 }],
+      ),
+      path(
+        ['Swift Step', 'Blur Strike', 'Twin Daggers', 'Shade Flurry'],
+        ['Faster', 'Faster', 'Extra dagger', 'Insane tempo'],
+        [220, 450, 1000, 3000],
+        [{ rate: 0.3 }, { rate: 0.4 }, { extraShots: 1 }, { rate: 0.5, extraShots: 1 }],
+      ),
+      path(
+        ['Hunt Range', 'Stalker Reach', 'Lead Venom', 'Umbral Sight'],
+        ['+range', 'More range', 'Pops lead', 'Camo king'],
+        [180, 360, 650, 1700],
+        [{ range: 25 }, { range: 35 }, { lead: true }, { camo: true, range: 30 }],
+      ),
+    ],
+  },
+  {
+    id: 'goospray', name: 'Goospray', role: 'Glue slow', cost: 300, range: 145,
+    damage: 0, rate: 0.95, pierce: 5, color: '#c0ca33', accent: '#9e9d24',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: true, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0.55, minRange: 0,
+    paths: [
+      path(
+        ['Stickier Goo', 'Tar Splash', 'Molasses Bomb', 'Super Glue'],
+        ['Stronger slow', 'Splash goo', 'Heavy slow', 'Near stop'],
+        [160, 320, 700, 2000],
+        [{ slow: 0.1 }, { splash: 40, slow: 0.1 }, { slow: 0.15, splash: 20 }, { slow: 0.2, splash: 30 }],
+      ),
+      path(
+        ['Quick Spray', 'Goo Pump', 'Double Squirt', 'Goo Hose'],
+        ['Faster', 'Faster', 'Extra shot', 'Relentless goo'],
+        [140, 300, 650, 1800],
+        [{ rate: 0.2 }, { rate: 0.3 }, { extraShots: 1 }, { rate: 0.4, extraShots: 1 }],
+      ),
+      path(
+        ['Wide Nozzle', 'Long Hose', 'Corrosive Lead', 'Goo Vision'],
+        ['+range', 'More range', 'Pops lead (+1 dmg)', 'Sees camo'],
+        [120, 260, 500, 1400],
+        [{ range: 20 }, { range: 30 }, { lead: true, dmg: 1 }, { camo: true, range: 20 }],
+      ),
+    ],
+  },
+  {
+    id: 'coinGrove', name: 'Coin Grove', role: 'Farm gold', cost: 750, range: 0,
+    damage: 0, rate: 0, pierce: 0, color: '#ffc107', accent: '#ff8f00',
+    seesCamo: false, popsLead: false, isFarm: true, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 45, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Fertile Soil', 'Golden Roots', 'Treasure Grove', 'Mint Empire'],
+        ['+income', 'More income', 'Big income', 'Huge payouts'],
+        [350, 700, 1800, 5500],
+        [{ farmIncome: 25 }, { farmIncome: 45 }, { farmIncome: 70 }, { farmIncome: 120 }],
+      ),
+      path(
+        ['Fast Bloom', 'Harvest Rush', 'Double Crop', 'Market Flood'],
+        ['Faster payout', 'Faster', 'Bonus tick', 'Rapid gold'],
+        [300, 650, 1600, 4800],
+        [{ rate: 0.25 }, { rate: 0.35 }, { farmIncome: 25 }, { rate: 0.45, farmIncome: 40 }],
+      ),
+      path(
+        ['Coin Shine', 'Vault Roots', 'Banked Grove', 'Royal Mint'],
+        ['+income', 'More', 'Big', 'Fortune tree'],
+        [280, 600, 1500, 4200],
+        [{ farmIncome: 20 }, { farmIncome: 35 }, { farmIncome: 55 }, { farmIncome: 95 }],
+      ),
+    ],
+  },
+  {
+    id: 'grovesage', name: 'Grovesage', role: 'Thorn AOE pulse', cost: 600, range: 155,
+    damage: 1, rate: 0.6, pierce: 99, color: '#2e7d32', accent: '#1b5e20',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: true, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Thorn Burst', 'Briar Pulse', 'Wildwood Fury', 'Worldroot'],
+        ['+damage', 'More damage', 'Heavy pulse', 'Devastating AOE'],
+        [280, 550, 1300, 3800],
+        [{ dmg: 1 }, { dmg: 2 }, { dmg: 3 }, { dmg: 6 }],
+      ),
+      path(
+        ['Quick Growth', 'Pulse Tempo', 'Double Bloom', 'Thorn Cascade'],
+        ['Faster', 'Faster', 'Extra pulse', 'Rapid pulses'],
+        [250, 500, 1200, 3400],
+        [{ rate: 0.15 }, { rate: 0.25 }, { extraShots: 1 }, { rate: 0.3 }],
+      ),
+      path(
+        ['Wide Canopy', 'Deep Roots', 'Iron Thorns', 'Spirit Sight'],
+        ['+range', 'More range', 'Pops lead', 'Sees camo'],
+        [200, 400, 700, 1900],
+        [{ range: 25 }, { range: 40 }, { lead: true }, { camo: true, range: 30 }],
+      ),
+    ],
+  },
+  {
+    id: 'arccoil', name: 'Arccoil', role: 'Chain lightning', cost: 675, range: 165,
+    damage: 2, rate: 0.75, pierce: 1, color: '#00bcd4', accent: '#00838f',
+    seesCamo: false, popsLead: true, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: true,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Hot Coil', 'Storm Arc', 'Thunder Lance', 'Skybreaker'],
+        ['+damage', '+chain', 'Heavy bolt', 'Godbolt'],
+        [300, 600, 1400, 4000],
+        [{ dmg: 1 }, { chain: 1 }, { dmg: 3, chain: 1 }, { dmg: 5, chain: 2 }],
+      ),
+      path(
+        ['Fast Spark', 'Overclock', 'Twin Coil', 'Lightning Cage'],
+        ['Faster', 'Faster', 'Extra bolt', 'Storm tempo'],
+        [260, 520, 1200, 3500],
+        [{ rate: 0.2 }, { rate: 0.3 }, { extraShots: 1 }, { rate: 0.35, chain: 1 }],
+      ),
+      path(
+        ['Long Arc', 'Far Coil', 'Deep Charge', 'Storm Sight'],
+        ['+range', 'More range', '+chain', 'Sees camo'],
+        [220, 440, 800, 2000],
+        [{ range: 25 }, { range: 40 }, { chain: 1 }, { camo: true, range: 30 }],
+      ),
+    ],
+  },
+  {
+    id: 'spikeForge', name: 'Spike Forge', role: 'Path spike piles', cost: 350, range: 140,
+    damage: 1, rate: 0.55, pierce: 0, color: '#90a4ae', accent: '#546e7a',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: true, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Hard Spikes', 'Barbed Pile', 'Caltrap Forge', 'Deathtrap'],
+        ['+damage', 'More hits', 'Heavy traps', 'Lethal piles'],
+        [150, 320, 700, 2000],
+        [{ dmg: 1 }, { pierce: 6 }, { dmg: 2, pierce: 6 }, { dmg: 5, pierce: 12 }],
+      ),
+      path(
+        ['Quick Drop', 'Forge Rush', 'Double Drop', 'Spike Rain'],
+        ['Faster drops', 'Faster', 'Extra pile', 'Carpet spikes'],
+        [160, 340, 750, 2000],
+        [{ rate: 0.15 }, { rate: 0.25 }, { extraShots: 1 }, { rate: 0.3, extraShots: 1 }],
+      ),
+      path(
+        ['Far Drop', 'Path Scout', 'Lead Spikes', 'Trap Sight'],
+        ['+range', 'More range', 'Pops lead', 'Sees camo piles'],
+        [140, 280, 500, 1500],
+        [{ range: 20 }, { range: 35 }, { lead: true }, { camo: true, range: 25 }],
+      ),
+    ],
+  },
+  {
+    id: 'mortarpit', name: 'Mortarpit', role: 'Lob shells', cost: 700, range: 370,
+    damage: 4, rate: 0.42, pierce: 1, color: '#5d4037', accent: '#3e2723',
+    seesCamo: false, popsLead: true, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: true,
+    isGlue: false, isFrost: false, isBomb: true, isChain: false,
+    farmIncome: 0, splash: 80, slow: 0, minRange: 80,
+    paths: [
+      path(
+        ['Heavy Shell', 'Cluster Mortar', 'Siege Bomb', 'Crater Maker'],
+        ['+damage & splash', 'Bigger splash', 'Heavy', 'Nuke shells'],
+        [280, 580, 1400, 4000],
+        [{ dmg: 2, splash: 25 }, { splash: 35, dmg: 2 }, { dmg: 5, splash: 45 }, { dmg: 10, splash: 70 }],
+      ),
+      path(
+        ['Quick Load', 'Rapid Mortar', 'Double Lob', 'Battery Fire'],
+        ['Faster', 'Faster', 'Extra shell', 'Barrage'],
+        [280, 560, 1400, 4000],
+        [{ rate: 0.1 }, { rate: 0.15 }, { extraShots: 1 }, { rate: 0.2, extraShots: 1 }],
+      ),
+      path(
+        ['Long Lob', 'Siege Reach', 'Frag Shell', 'Spotter'],
+        ['+range', 'Huge range', '+pierce', 'Sees camo'],
+        [240, 500, 900, 2200],
+        [{ range: 40 }, { range: 70 }, { pierce: 2 }, { camo: true, range: 40 }],
+      ),
+    ],
+  },
+  {
+    id: 'keeptotem', name: 'Keeptotem', role: 'Support aura', cost: 850, range: 200,
+    damage: 0, rate: 0, pierce: 0, color: '#8e24aa', accent: '#4a148c',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: true,
+    isRadial: false, isBeam: false, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['War Chant', 'Battle Hymn', 'Fury Totem', 'Wrath Idol'],
+        ['+nearby damage', 'More dmg aura', 'Strong aura', 'Godly damage aura'],
+        [350, 750, 1800, 4800],
+        [{ auraDmg: 0.12 }, { auraDmg: 0.18 }, { auraDmg: 0.28 }, { auraDmg: 0.4 }],
+      ),
+      path(
+        ['Drum Beat', 'Tempo Totem', 'Haste Idol', 'Time Warp'],
+        ['+nearby rate', 'More rate', 'Strong rate', 'Insane tempo aura'],
+        [350, 750, 1800, 4800],
+        [{ auraRate: 0.12 }, { auraRate: 0.18 }, { auraRate: 0.28 }, { auraRate: 0.4 }],
+      ),
+      path(
+        ['Wide Aura', 'Grand Totem', 'Vision Idol', 'Omni Totem'],
+        ['+aura range', 'More range', 'Share camo vision', 'Range + camo aura'],
+        [350, 700, 1600, 4000],
+        [{ auraRange: 30 }, { auraRange: 50 }, { auraCamo: true }, { auraRange: 40, auraCamo: true }],
+      ),
+    ],
+  },
+  {
+    id: 'hyperward', name: 'Hyperward', role: 'Hungry beam', cost: 1500, range: 220,
+    damage: 2, rate: 9, pierce: 1, color: '#e91e63', accent: '#880e4f',
+    seesCamo: false, popsLead: false, isFarm: false, isSupport: false,
+    isRadial: false, isBeam: true, isPulse: false, isTrap: false, isLob: false,
+    isGlue: false, isFrost: false, isBomb: false, isChain: false,
+    farmIncome: 0, splash: 0, slow: 0, minRange: 0,
+    paths: [
+      path(
+        ['Hot Beam', 'Plasma Focus', 'Annihilator', 'Singularity'],
+        ['+damage', 'More damage', 'Heavy beam', 'Delete orbs'],
+        [600, 1200, 2800, 8000],
+        [{ dmg: 1 }, { dmg: 2 }, { dmg: 5 }, { dmg: 10 }],
+      ),
+      path(
+        ['Overclock', 'Hyper Tempo', 'Split Beam', 'Prism Barrage'],
+        ['Faster tick', 'Faster', 'Extra beam', 'Multi-beam'],
+        [500, 1000, 2500, 7000],
+        [{ rate: 2 }, { rate: 3 }, { extraShots: 1 }, { rate: 5, extraShots: 1 }],
+      ),
+      path(
+        ['Long Beam', 'Far Ward', 'Lead Burn', 'True Beam'],
+        ['+range', 'More range', 'Pops lead', 'Sees camo'],
+        [450, 900, 1700, 4000],
+        [{ range: 35 }, { range: 55 }, { lead: true }, { camo: true, range: 45 }],
+      ),
+    ],
+  },
+]
+
+export const TOWER_BY_ID: Record<TowerId, TowerDef> = Object.fromEntries(
+  TOWERS.map((t) => [t.id, t]),
+) as Record<TowerId, TowerDef>
