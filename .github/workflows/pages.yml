@@ -20,7 +20,7 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - run: PAGES_BASE=/Orbkeep/ npm run build
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
